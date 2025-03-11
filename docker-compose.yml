@@ -1,0 +1,26 @@
+networks:
+  my_net:
+    driver: bridge
+
+services:
+  fast-api:
+    image: my-fast-api
+    build:
+      context: ./fast-api-app    
+    restart: always
+    ports: 
+      - "8000:8000"
+    networks:
+      - my_net
+    
+  curl:
+    image: my-curl
+    build:
+      context: ./curl_app
+    environment:
+      MY_ADDRESS: http://fast-api:8000
+    restart: always
+    networks:
+      - my_net
+    depends_on:
+      - fast-api
